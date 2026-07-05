@@ -10,15 +10,6 @@ DISK=/dev/vda
 
 talosctl get disks --insecure --nodes $CONTROL_PLANE_IP
 
-talosctl gen config $CLUSTER_NAME https://$CONTROL_PLANE_IP:6443 --install-disk $DISK --output-dir .
-
-kustomize build --enable-helm ./cilium >cilium-manifest.yaml
-kustomize build --enable-helm ./argocd >argocd-manifest.yaml
-
-talosctl apply-config --insecure --nodes $CONTROL_PLANE_IP --file $CONTROL_PLANE_YAML
-
-talosctl --talosconfig=$TALOSCONFIG config endpoints $CONTROL_PLANE_IP
-
 # until talosctl --talosconfig=./talosconfig --nodes 192.168.128.2 version &>/dev/null; do
 #   echo "Not ready, retry in 5 seconds"
 #   sleep 5
@@ -31,8 +22,3 @@ talosctl --talosconfig=$TALOSCONFIG config endpoints $CONTROL_PLANE_IP
 
 # Wait until rebooted
 talosctl bootstrap --nodes $CONTROL_PLANE_IP --talosconfig=./talosconfig
-
-talosctl kubeconfig . --talosconfig $TALOSCONFIG --endpoints $CONTROL_PLANE_IP --nodes $CONTROL_PLANE_IP
-
-kubectl --kubeconfig kubeconfig get nodes
-kubectl --kubeconfig kubeconfig get pods --all-namespaces

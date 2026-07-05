@@ -3,7 +3,7 @@ clusterName: homelab
 # https://github.com/siderolabs/talos/releases
 talosVersion: v1.13.5 
 kubernetesVersion: v1.35.0
-endpoint: https://10.10.10.228:6443
+endpoint: https://${control_plane_ip}:6443
 allowSchedulingOnMasters: true
 additionalApiServerCertSans:
   - homelab.local
@@ -13,10 +13,24 @@ clusterPodNets:
 clusterSvcNets:
   - 10.96.0.0/12
 cniConfig:
-  # Will install Cilium
+  # Will install Cilium CNI
   name: none
 nodes:
   - hostname: homelab-control-01
     installDisk: /dev/vda
-    ipAddress: 10.10.10.228
+    ipAddress: ${control_plane_ip}
     controlPlane: true
+
+patches:
+  # Replace kube-proxy with Cilium
+  - |-
+    cluster:
+      proxy:
+        disabled: true
+    machine:
+      sysctls:
+        net.ipv4.ip_forward: "1"
+        net.ipv6.conf.all.forwarding: "1"
+        net.ipv4.conf.all.rp_filter: "0"
+        net.ipv4.conf.default.rp_filter: "0"
+

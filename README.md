@@ -4,9 +4,7 @@
 1. Download ISO https://factory.talos.dev
     - Bare metal
     - ARM64 on macOS VM using UTM app
-    - Extensions - qemu
     - Download ISO
-    - or `talosctl cluster create qemu --schematic-id=ce4c980550dd2ab1b17bbf2b08801c7eb59418eafe8f279833297925d67c7515 --talos-version=v1.13.5`
 1. UTM create linux VM from ISO
     - Networking 
         - shared

@@ -4,7 +4,7 @@ list:
 
 _talosctl command args="":
 	@talosctl {{command}} \
-		--nodes $(yq '.nodes[0].ipAddress' talconfig.yaml) \
+		--nodes $(yq '.contexts.homelab.endpoints[0]' ./clusterconfig/talosconfig) \
 		--talosconfig=./clusterconfig/talosconfig \
 		{{args}}
 
@@ -16,6 +16,10 @@ dashboard:
 [group("monitoring")]
 health:
 	@just _talosctl "health"
+
+gensecrets:
+	talhelper gensecret > talsecret.sops.yaml
+	sops --encrypt --in-place talsecret.sops.yaml
 
 # Apply a new configuration to a node
 [group("dev")]
@@ -34,8 +38,15 @@ kubeconfig:
 # See if a TCP connection to the node on port 50,000 is possible
 [group("monitoring")]
 check-connection:
-	nc -zv $(yq '.nodes[0].ipAddress' talconfig.yaml) 50000
+	nc -zv $(yq '.contexts.homelab.endpoints[0]' ./clusterconfig/talosconfig) 50000
 
 [group("maintenance")]
 reboot:
 	@just _talosctl reboot
+
+apply-cilium:
+	kustomize build --enable-helm ~/dev/homelab/apps/cilium/ \
+		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
+
+apply-argocd:
+	echo "todo"
