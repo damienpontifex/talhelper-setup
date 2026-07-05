@@ -45,10 +45,21 @@ reboot:
 	@just _talosctl reboot
 
 apply-cilium:
-	kustomize build --enable-helm ~/dev/homelab/apps/cilium/ \
+	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/cilium/ \
 		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
 
 apply-argocd:
-	kustomize build --enable-helm ~/dev/homelab/apps/argocd \
+	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/argocd \
 		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
+
+apply-cloudflare-tunnel:
+	# Need tunnel in place so that external secrets can validate the issuer
+	kubectl --kubeconfig=./kubeconfig apply --server-side=true --filename ~/dev/homelab/apps/02-core-services/cloudflare-tunnel/namespace.yaml
+	# Get the secret manually to bootstrap and external secrets will manage afterwards
+	kubectl --kubeconfig=./kubeconfig create secret generic cloudflare-api-token \
+		--namespace cloudflare-tunnel \
+		--from-literal=token=$(az keyvault secret show --name cloudflare-api-token --vault-name pontifex-homelab --query 'value' --output tsv) || true
+	# Apply the role and deployment to make this happen
+	kubectl --kubeconfig=./kubeconfig apply --server-side=true --filename ~/dev/homelab/apps/02-core-services/cloudflare-tunnel/jwk-discovery.yaml
+	kubectl --kubeconfig=./kubeconfig apply --server-side=true --filename ~/dev/homelab/apps/02-core-services/cloudflare-tunnel/cloudflare-tunnel.yaml
 
