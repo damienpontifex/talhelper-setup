@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=.schema/talconfig.json
+clusterName: homelab
+# https://github.com/siderolabs/talos/releases
+talosVersion: v1.13.5 
+kubernetesVersion: v1.35.0
+endpoint: https://10.10.10.228:6443
+allowSchedulingOnMasters: true
+additionalApiServerCertSans:
+  - homelab.local
+  - home.pontifex.dev
+clusterPodNets:
+  - 10.244.0.0/16
+clusterSvcNets:
+  - 10.96.0.0/12
+cniConfig:
+  # Will install Cilium
+  name: none
+nodes:
+  - hostname: homelab-control-01
+    installDisk: /dev/vda
+    ipAddress: 10.10.10.228
+    controlPlane: true
