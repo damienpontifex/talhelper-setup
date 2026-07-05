@@ -49,4 +49,6 @@ apply-cilium:
 		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
 
 apply-argocd:
-	echo "todo"
+	kustomize build --enable-helm ~/dev/homelab/apps/argocd \
+		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
+
