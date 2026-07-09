@@ -20,6 +20,8 @@ nodes:
     installDisk: /dev/vda
     ipAddress: ${control_plane_ip}
     controlPlane: true
+    certSANs:
+      - ${control_plane_ip}
 
 patches:
   # Replace kube-proxy with Cilium
