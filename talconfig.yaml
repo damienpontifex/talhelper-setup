@@ -1,5 +1,9 @@
 # yaml-language-server: $schema=.schema/talconfig.json
-clusterName: homelab
+
+.variables:
+  cluster_name: &cname homelab
+
+clusterName: *cname
 # https://github.com/siderolabs/talos/releases
 talosVersion: v1.13.5 
 kubernetesVersion: v1.35.0
@@ -22,6 +26,10 @@ nodes:
     controlPlane: true
     certSANs:
       - ${control_plane_ip}
+    nodeLabels:
+      app.kubernetes.io/cluster: *cname
+      topology.kubernetes.io/region: home
+      topology.kuberentes.io/zone: home-a
 
 patches:
   # Replace kube-proxy with Cilium
