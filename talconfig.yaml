@@ -30,7 +30,7 @@ nodes:
     nodeLabels:
       app.kubernetes.io/cluster: *cname
       topology.kubernetes.io/region: home
-      topology.kuberentes.io/zone: home-a
+      topology.kubernetes.io/zone: home-a
 
 patches:
   # Replace kube-proxy with Cilium

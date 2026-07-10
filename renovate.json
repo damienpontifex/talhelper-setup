@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "talconfig\\.yaml$"
+      ],
+      "matchStrings": [
+        "talosVersion:\\s*[\"']?(?<currentValue>v[0-9.]+)[\"']?"
+      ],
+      "depNameTemplate": "siderolabs/talos",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "talconfig\\.yaml$"
+      ],
+      "matchStrings": [
+        "kubernetesVersion:\\s*[\"']?(?<currentValue>v[0-9.]+)[\"']?"
+      ],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "kubernetes"
+    }
+  ]
+}
