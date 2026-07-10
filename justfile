@@ -15,7 +15,7 @@ dashboard:
 
 [group("monitoring")]
 health:
-	@just _talosctl "health"
+	talhelper gencommand health | sh
 
 gensecrets:
 	talhelper gensecret > talsecret.sops.yaml
@@ -24,7 +24,15 @@ gensecrets:
 # Apply a new configuration to a node
 [group("dev")]
 apply-config: genconfig
-	@just _talosctl "apply-config" "--file=./clusterconfig/homelab-homelab-control-01.yaml"
+	talhelper gencommand apply | sh
+
+[group("dev")]
+upgrade-k8s: genconfig
+	talhelper gencommand upgrade-k8s | sh
+
+[group("dev")]
+upgrade: genconfig
+	talhelper gencommand upgrade | sh
 
 # Generate Talos cluster config YAML files
 [group("dev")]
@@ -33,7 +41,7 @@ genconfig:
 
 [group("ops")]
 kubeconfig:
-	@just _talosctl kubeconfig .
+	talhelper gencommand kubeconfig | sh
 
 # See if a TCP connection to the node on port 50,000 is possible
 [group("monitoring")]
@@ -46,7 +54,8 @@ reboot:
 
 apply-cilium:
 	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/cilium/ \
-		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
+		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig --force-conflicts
+# k exec -it -n kube-system cilium-lhg9v -- cilium bgp peers
 
 apply-argocd:
 	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/argocd \

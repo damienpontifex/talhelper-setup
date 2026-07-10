@@ -6,7 +6,8 @@
 clusterName: *cname
 # https://github.com/siderolabs/talos/releases
 talosVersion: v1.13.5 
-kubernetesVersion: v1.35.0
+# https://kubernetes.io/releases/
+kubernetesVersion: v1.36.2
 endpoint: https://${control_plane_ip}:6443
 allowSchedulingOnMasters: true
 additionalApiServerCertSans:
