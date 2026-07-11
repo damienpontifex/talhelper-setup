@@ -2,10 +2,18 @@
 
 .variables:
   cluster_name: &cname homelab
+  all_node_patches:
+    # https://kubernetes.io/docs/tutorials/security/seccomp/#enable-the-use-of-runtimedefault-as-the-default-seccomp-profile-for-all-workloads
+    # Talos machine config patch to enable default seccomp
+    - &SEC_COMP_RUNTIME_DEFAULT |-
+      machine:
+        kubelet:
+          defaultRuntimeSeccompProfileEnabled: true
+
 
 clusterName: *cname
 # https://github.com/siderolabs/talos/releases
-talosVersion: v1.13.6 
+talosVersion: v1.13.6
 # https://kubernetes.io/releases/
 kubernetesVersion: v1.36.2
 endpoint: https://${control_plane_ip}:6443
@@ -25,13 +33,46 @@ nodes:
     installDisk: /dev/vda
     ipAddress: ${control_plane_ip}
     controlPlane: true
-    certSANs:
-      - ${control_plane_ip}
-    nodeLabels:
+
+worker:
+  nodeLabels:
       app.kubernetes.io/cluster: *cname
       topology.kubernetes.io/region: home
       topology.kubernetes.io/zone: home-a
+  patches:
+    - *SEC_COMP_RUNTIME_DEFAULT
 
+controlPlane:
+  certSANs:
+    - ${control_plane_ip}
+  nodeLabels:
+      app.kubernetes.io/cluster: *cname
+      topology.kubernetes.io/region: home
+      topology.kubernetes.io/zone: home-a
+  patches:
+    - *SEC_COMP_RUNTIME_DEFAULT
+    # https://kubernetes.io/docs/tutorials/security/cluster-level-pss
+    # https://kubernetes.io/docs/concepts/security/pod-security-standards/
+    - |-
+      cluster:
+        apiServer:
+          admissionControl:
+            - name: PodSecurity
+              configuration:
+                apiVersion: pod-security.admission.config.k8s.io/v1
+                kind: PodSecurityConfiguration
+                defaults:
+                  enforce: baseline
+                  enforce-version: latest
+                  warn: restricted
+                  warn-version: latest
+                  audit: restricted
+                  audit-version: latest
+                exemptions:
+                  namespaces:
+                    - kube-system
+                  runtimeClasses: []
+                  usernames: []
 patches:
   # Replace kube-proxy with Cilium
   - |-

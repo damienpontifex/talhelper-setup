@@ -3,14 +3,20 @@ sops:
     age:
         - enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSUFg1a2VyWnNneVZuSjVS
-            VE12YVFoQm1Bek9md2xuZ3N2MUdOSEVoNVdvCk0rM2hNYWZjQzlaQmlhbEJEa0Qr
-            VVVUNG5xcnBVL1pHbFZ6Y2hkdTlHU0EKLS0tIGkrUHNMaktYK0djT1JIeGJVeTk1
-            RDRnZlpJQTh5TWNFNnFjQ3ZkcVJWYTAKUJZEkUsW0lIW6d3LsMSyM01NEpDiRlwx
-            qhJNaouUJLiL17dFJh1tunoEjEMUk87qSgZB6tkr3/NEBpRrIZOsuA==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYZm5HUnhhdEtVNXdyMWxn
+            NGRBQ1MzcHJVUjhPME9sYXEvWmR0L1pBcFQ4Cnd1KzFTN3hJdDJrdmVucElySkV5
+            V3FHRnl6VWtuQ0hhd3M2Wk91dkxFdjQKLS0tIDBSUFhHbEVRSUNCVVZ6UTRlMjZS
+            YlVJRlhxQjlJUkNjZjdXREk1N2IvRlEKtjHS7K9NOXoJ6W2xMLXnz5tyExLHiK71
+            dFi/R/fWiq1b2Lk/EmLFsHOkDH/waNPfbjM+SKRlU0AoleyexbiLrA==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1fn9hqngnz0582zwe6qxzzq7l7dy2kwxf23ujzcrqsp5sha52zs2q5tcazn
-    lastmodified: "2026-07-09T06:40:01Z"
-    mac: ENC[AES256_GCM,data:jjywtRB4SDuocGU1A7KNSYhsgKvcMC/NBU55zMzA8zAjM4p6Uo7gI/6W6RbupNdEqb1ANDyM6V1F6VXLsTmtM3ExMq/rvxArINdpgj0v2ujRz8n9FApqyoIoGrSkaTtW2vTFHrYxQ4F1ZTnBFhbbmudlbCM2hftIKHitL+x7BPM=,iv:/ObMww04sQHAnOttnTpJaD2kjF+JUI6+7eOYzpDIwuo=,tag:jkTBkKtLhMsLNoEnlWQxmQ==,type:str]
+    azure_kv:
+        - created_at: "2026-07-11T00:03:17Z"
+          enc: CUkk3_hnKdeigb_axrovh4_km5BcsSyMa_rwlwyfb1RIW_EZhn3FnjuBfh9gNOgrTLdO4dYX2ix7jw1v5xmsnHpKND9TWSyaYM_x3Z7qOyx1yC_drEnHg0wfW35wqfqqAsTreso0ex7sSyX3Z8nQOmXF-w64aCP3bKFGvrPEkH_iWWVhkcCCRXhNuhZxvUOXZwL8BXSwyoaqmh9I9o7N6xjMB6GjuHxIqrG-3He0S1wdHuKkozVOOrnFbKukL5hc90pMefxqdlkYoChGWW5DRhsH0mia5KsXchX3QmrjzW4MeSfS-z7uSEWveWPSKk2r8DGs_a6J85e84gjTywy-FFsMlrVIq6lJBv6WrdTe7vRhFreY5sXj4dM2go7zgk_zbWv1-ZDQBS1Up7DI-xp_0pS28trcfro1fcH6FVqsb_sn3q6_2KaeCWYuN20VggCBtT_s5aOMySBmoPljKdfBeN0d-_yjjoPfcCDoVNSUmDuvRmi6sBmY77uCVkQjzn67sIls-vL-mHwrXV7Xm-xTinUdrwYGsC03fSlgtjBEA7MeoeEGfxaBOYER45yXlRxeZbzV2BCV9zECKHjpqYLskCWJJtIJfAOcCKgI46nfZXe_ys9cimYzmZFwSByLjpnrpI9ZXBTMyHRdWSy4vO1EktIR1TMAf-KHeaSnG6NeuUs
+          name: sops-age
+          vault_url: https://pontifex-sops.vault.azure.net
+          version: fc3762d867974758b2fcfd830a507789
+    lastmodified: "2026-07-10T23:53:41Z"
+    mac: ENC[AES256_GCM,data:gllsIsUZTMsiUSwqrugcV02U68mxV01dUTkfGdGi3YBhLOF5BCAFzQJ3RIZhTZp4D19NNDRIu5bhH2WVhE2ednavPdYDjKDOPzwRDLZpSC5ow2DiH/zLczPBPpSlcdpo6rVDcfr+VGIwz+HhtbcpLhkV19EtJk0y0NS61GsMWAI=,iv:wvUOS5ppA68hpPy2Nu6f3g12vIYxfD3K4FU6gaex+3o=,tag:KmPWaJjFa07YthJBBIr8uw==,type:str]
     unencrypted_suffix: _unencrypted
-    version: 3.13.1
+    version: 3.13.2

@@ -17,13 +17,28 @@ dashboard:
 health:
 	talhelper gencommand health | sh
 
-gensecrets:
-	talhelper gensecret > talsecret.sops.yaml
-	sops --encrypt --in-place talsecret.sops.yaml
+# Bootstrap a new cluster
+[group("ops")]
+bootstrap:
+	# Generate secrets if they don't already exist
+	[ -f talsecret.sops.yaml ] || { \
+		talhelper gensecret > talsecret.sops.yaml && \
+		sops --encrypt --in-place talsecret.sops.yaml \
+	}
+	talhelper genconfig
+	talhelper gencommand apply --extra-flags=--insecure | bash
+	# TODO: Wait until read before etcd bootstrap after initial apply
+	talhelper gencommand bootstrap | bash
+	# TODO: Wait until k8s available
+	# 1. get kubeconfig
+	# 2. apply policies
+	# 3. apply cilium
+	# 4. apply argocd
+	# 5. apply cloudflare tunnel # may just need to bootstrap the secret so it can start up and setup access for external secrets
 
 # Apply a new configuration to a node
 [group("dev")]
-apply-config: genconfig
+apply: genconfig
 	talhelper gencommand apply | sh
 
 [group("dev")]
@@ -39,6 +54,7 @@ upgrade: genconfig
 genconfig:
 	talhelper genconfig
 
+# Add kubeconfig
 [group("ops")]
 kubeconfig:
 	talhelper gencommand kubeconfig | sh
@@ -54,8 +70,12 @@ reboot:
 
 apply-cilium:
 	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/cilium/ \
-		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig --force-conflicts
+		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
 # k exec -it -n kube-system cilium-lhg9v -- cilium bgp peers
+
+apply-policies:
+	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/admission/ \
+		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
 
 apply-argocd:
 	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/argocd \
