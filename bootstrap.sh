@@ -2,11 +2,7 @@
 
 set -euo pipefail
 
-CLUSTER_NAME=utm-cluster
 CONTROL_PLANE_IP=192.168.65.2
-TALOSCONFIG=./talosconfig
-CONTROL_PLANE_YAML=./controlplane.yaml
-DISK=/dev/vda
 
 talosctl get disks --insecure --nodes $CONTROL_PLANE_IP
 

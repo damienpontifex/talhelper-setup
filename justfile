@@ -21,10 +21,11 @@ health:
 [group("ops")]
 bootstrap:
 	# Generate secrets if they don't already exist
-	[ -f talsecret.sops.yaml ] || { \
-		talhelper gensecret > talsecret.sops.yaml && \
-		sops --encrypt --in-place talsecret.sops.yaml \
-	}
+	if [[ ! -f talsecret.sops.yaml ]]; then \
+		echo "Generating secrets"; \
+		talhelper gensecret > talsecret.sops.yaml; \
+		sops --encrypt --in-place talsecret.sops.yaml; \
+	fi
 	talhelper genconfig
 	talhelper gencommand apply --extra-flags=--insecure | bash
 	# TODO: Wait until read before etcd bootstrap after initial apply
@@ -59,6 +60,9 @@ genconfig:
 kubeconfig:
 	talhelper gencommand kubeconfig | sh
 
+reset:
+	talhelper gencommand reset --extra-flags --reboot | sh
+
 # See if a TCP connection to the node on port 50,000 is possible
 [group("monitoring")]
 check-connection:
@@ -68,8 +72,14 @@ check-connection:
 reboot:
 	@just _talosctl reboot
 
+[group("maintenance")]
+shutdown:
+	@just _talosctl shutdown
+
 apply-cilium:
 	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/cilium/ \
+		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
+	kustomize build --enable-helm ~/dev/homelab/apps/01-system-core/cilium-resources/ \
 		| kubectl apply --server-side=true --filename - --kubeconfig=./kubeconfig
 # k exec -it -n kube-system cilium-lhg9v -- cilium bgp peers
 

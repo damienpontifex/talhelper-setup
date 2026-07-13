@@ -1,4 +1,5 @@
-control_plane_ip: ENC[AES256_GCM,data:yByOB0Z0gr6f5U6S,iv:0XVq8uw194/AaIcysg10WItRSuXNm7w59oT0JLz2oRw=,tag:mjkDTYRpqYmDD7cCBWvoPA==,type:str]
+control_plane_ip: ENC[AES256_GCM,data:JEWig/Ud5JepgvMS,iv:OKvnoc9Lmj9JyVZyfwd6vmCUzot4/hebtRvY7tZPe3s=,tag:9I0w8UxX36PxgafQP4KW2Q==,type:str]
+cluster_name: ENC[AES256_GCM,data:WzDist7PJw==,iv:FF5Jmyv3xvv0pp2X+MpwOcbPu9t6jT585P+ENooTvMc=,tag:ZKJOUhuVSFGUbpo+pd2+mg==,type:str]
 sops:
     age:
         - enc: |
@@ -16,7 +17,7 @@ sops:
           name: sops-age
           vault_url: https://pontifex-sops.vault.azure.net
           version: fc3762d867974758b2fcfd830a507789
-    lastmodified: "2026-07-10T23:53:41Z"
-    mac: ENC[AES256_GCM,data:gllsIsUZTMsiUSwqrugcV02U68mxV01dUTkfGdGi3YBhLOF5BCAFzQJ3RIZhTZp4D19NNDRIu5bhH2WVhE2ednavPdYDjKDOPzwRDLZpSC5ow2DiH/zLczPBPpSlcdpo6rVDcfr+VGIwz+HhtbcpLhkV19EtJk0y0NS61GsMWAI=,iv:wvUOS5ppA68hpPy2Nu6f3g12vIYxfD3K4FU6gaex+3o=,tag:KmPWaJjFa07YthJBBIr8uw==,type:str]
+    lastmodified: "2026-07-13T09:32:34Z"
+    mac: ENC[AES256_GCM,data:ehbetnklj4OQh1rs+uLqBSdoaEVNpZX3ZXingQOWg6doiGtODQxer56HLXzQxtG6szQUvof2FTHxBYqYlYXm8hGNlMWIsdJ0IiNFCKdaXTtLHYc7mH3Ya0FJaO0dmRsGp/1T60App7sJRboWyff1HwsgOQ8WpiXqkDLohfaTqnk=,iv:nSgIEaMODa2WEOf4aYtl2STWtZ+GgczaRq1nkyRueVw=,tag:xbdJgKpEmyHpvm5QI/wEGw==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.13.2

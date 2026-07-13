@@ -1,17 +1,6 @@
 # yaml-language-server: $schema=.schema/talconfig.json
 
-.variables:
-  cluster_name: &cname homelab
-  all_node_patches:
-    # https://kubernetes.io/docs/tutorials/security/seccomp/#enable-the-use-of-runtimedefault-as-the-default-seccomp-profile-for-all-workloads
-    # Talos machine config patch to enable default seccomp
-    - &SEC_COMP_RUNTIME_DEFAULT |-
-      machine:
-        kubelet:
-          defaultRuntimeSeccompProfileEnabled: true
-
-
-clusterName: *cname
+clusterName: ${cluster_name}
 # https://github.com/siderolabs/talos/releases
 talosVersion: v1.13.6
 # https://kubernetes.io/releases/
@@ -19,6 +8,7 @@ kubernetesVersion: v1.36.2
 endpoint: https://${control_plane_ip}:6443
 allowSchedulingOnMasters: true
 additionalApiServerCertSans:
+  - ${control_plane_ip}
   - homelab.local
   - home.pontifex.dev
 clusterPodNets:
@@ -34,23 +24,20 @@ nodes:
     ipAddress: ${control_plane_ip}
     controlPlane: true
 
-worker:
-  nodeLabels:
-      app.kubernetes.io/cluster: *cname
-      topology.kubernetes.io/region: home
-      topology.kubernetes.io/zone: home-a
-  patches:
-    - *SEC_COMP_RUNTIME_DEFAULT
-
 controlPlane:
   certSANs:
     - ${control_plane_ip}
   nodeLabels:
-      app.kubernetes.io/cluster: *cname
+      app.kubernetes.io/cluster: ${cluster_name}
       topology.kubernetes.io/region: home
       topology.kubernetes.io/zone: home-a
   patches:
-    - *SEC_COMP_RUNTIME_DEFAULT
+    # https://kubernetes.io/docs/tutorials/security/seccomp/#enable-the-use-of-runtimedefault-as-the-default-seccomp-profile-for-all-workloads
+    # Talos machine config patch to enable default seccomp
+    - |-
+      machine:
+        kubelet:
+          defaultRuntimeSeccompProfileEnabled: true
     # https://kubernetes.io/docs/tutorials/security/cluster-level-pss
     # https://kubernetes.io/docs/concepts/security/pod-security-standards/
     - |-
@@ -59,8 +46,6 @@ controlPlane:
           admissionControl:
             - name: PodSecurity
               configuration:
-                apiVersion: pod-security.admission.config.k8s.io/v1
-                kind: PodSecurityConfiguration
                 defaults:
                   enforce: baseline
                   enforce-version: latest
@@ -69,8 +54,7 @@ controlPlane:
                   audit: restricted
                   audit-version: latest
                 exemptions:
-                  namespaces:
-                    - kube-system
+                  namespaces: []
                   runtimeClasses: []
                   usernames: []
 patches:

@@ -7,16 +7,13 @@
     - Download ISO
 1. UTM create linux VM from ISO
     - Networking 
-        - shared
+        - Bridged
         - Network card: e1000
-
-1. Bootstrap script
 
 ## Bootstrap with talhelper
 1. `brew install talhelper`
 1. Generate schema for YAML intellisense `mkdir -p .schema && talhelper genschema --file .schema/talconfig.json`
 1. Edit [./talhelper.yaml](./talhelper.yaml)
-1. `talhelper gensecret > talsecret.sops.yaml`
-1. Encrypt the secret with `sops --encrypt --in-place talsecret.sops.yaml`
-1. `talhelper genconfig`
-1. `talosctl apply-config --insecure --nodes $CONTROL_PLANE_IP --file ./clusterconfig/homelab-homelab-control-01.yaml`
+1. Edit talenv with control plane ip `sops edit talenv.sops.yaml`
+1. `just bootstrap`
+1. Eject the virtual disk from the VM
